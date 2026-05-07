@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contador Akali</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Cormorant+Garamond:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --laranja:     #F18859;
+      --roxo-escuro: #4C356B;
+      --roxo-medio:  #7B417B;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+    }
+
+    .contador-wrap {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 16px 28px;
+      backdrop-filter: blur(8px);
+    }
+
+    /* Número principal */
+    .numero-bloco {
+      text-align: center;
+      min-width: 72px;
+    }
+
+    .numero {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 52px;
+      font-weight: 600;
+      color: var(--laranja);
+      line-height: 1;
+      display: block;
+    }
+
+    .numero-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-top: 2px;
+    }
+
+    /* Divisor */
+    .divisor {
+      width: 1px;
+      height: 48px;
+      background: rgba(255,255,255,0.15);
+    }
+
+    /* Texto e barra */
+    .info-bloco { flex: 1; min-width: 180px; }
+
+    .info-titulo {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .info-titulo span { color: var(--laranja); }
+
+    .barra-fundo {
+      height: 6px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .barra-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--roxo-medio), var(--laranja));
+      border-radius: 3px;
+      width: 0%;
+      transition: width 1.4s cubic-bezier(.4,0,.2,1);
+    }
+
+    .barra-legenda {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+    }
+
+    /* Pulse badge */
+    .badge-vaga {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(241,136,89,0.15);
+      border: 1px solid rgba(241,136,89,0.3);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #F4B08A;
+      white-space: nowrap;
+    }
+
+    .pulse {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--laranja);
+      animation: pulsar 2s infinite;
+    }
+
+    @keyframes pulsar {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(1.5); }
+    }
+
+    /* Esqueleto de carregamento */
+    .skeleton {
+      background: linear-gradient(90deg, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.06) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 4px;
+    }
+
+    @keyframes shimmer { to { background-position: -200% 0; } }
+
+    .sk-numero { width: 52px; height: 52px; border-radius: 8px; }
+    .sk-linha1 { width: 160px; height: 13px; margin-bottom: 10px; }
+    .sk-barra  { width: 100%; height: 6px; border-radius: 3px; }
+
+    /* Versão mobile compacta */
+    @media (max-width: 420px) {
+      .contador-wrap { flex-direction: column; gap: 12px; padding: 16px 20px; text-align: center; }
+      .divisor { width: 48px; height: 1px; }
+      .info-bloco { min-width: unset; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="contador-wrap" id="contador">
+
+  <!-- Estado de carregamento -->
+  <div class="numero-bloco" id="sk-esq">
+    <div class="skeleton sk-numero"></div>
+  </div>
+  <div class="divisor"></div>
+  <div class="info-bloco" id="sk-dir">
+    <div class="skeleton sk-linha1"></div>
+    <div class="skeleton sk-barra"></div>
+  </div>
+
+</div>
+
+<script>
+  // ── CONFIGURAÇÃO — substitua pela URL do seu Apps Script ──
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwl7rvXt6fazop3bWayfMJPa6CAeAe4IDI5jL2H7KpEPqtAcCDXEFXA9fwqJD2LKLif/exec';
+
+  async function renderizarContador() {
+    try {
+      const res  = await fetch(`${APPS_SCRIPT_URL}?acao=contador`);
+      const json = await res.json();
+
+      const inscritos  = json.inscritos  ?? 0;
+      const vagas      = json.vagas      ?? 15;
+      const restantes  = json.restantes  ?? (vagas - inscritos);
+      const pct        = Math.min(100, (inscritos / vagas) * 100).toFixed(0);
+
+      document.getElementById('contador').innerHTML = `
+
+        <div class="numero-bloco">
+          <span class="numero" id="num-animado">0</span>
+          <span class="numero-label">confirmadas</span>
+        </div>
+
+        <div class="divisor"></div>
+
+        <div class="info-bloco">
+          <p class="info-titulo">
+            Turma em formação — <span>${restantes} vaga${restantes !== 1 ? 's' : ''} restante${restantes !== 1 ? 's' : ''}</span>
+          </p>
+          <div class="barra-fundo">
+            <div class="barra-fill" id="barra"></div>
+          </div>
+          <div class="barra-legenda">
+            <span>0</span>
+            <span>${vagas} vagas · Fase 1</span>
+          </div>
+        </div>
+
+        <div class="badge-vaga">
+          <span class="pulse"></span>
+          Inscrições abertas
+        </div>
+      `;
+
+      // Anima número de 0 até o valor real
+      let atual = 0;
+      const passo = Math.ceil(inscritos / 30);
+      const intervalo = setInterval(() => {
+        atual = Math.min(atual + passo, inscritos);
+        document.getElementById('num-animado').textContent = atual;
+        if (atual >= inscritos) clearInterval(intervalo);
+      }, 40);
+
+      // Anima barra
+      setTimeout(() => {
+        document.getElementById('barra').style.width = pct + '%';
+      }, 100);
+
+    } catch (_) {
+      // Fallback silencioso
+      document.getElementById('contador').innerHTML = `
+        <div class="numero-bloco">
+          <span class="numero" style="font-size:32px">Inscrições</span>
+        </div>
+        <div class="divisor"></div>
+        <div class="info-bloco">
+          <p class="info-titulo">Formação · <span>Vagas abertas</span></p>
+          <div class="barra-fundo"><div class="barra-fill" style="width:20%"></div></div>
+        </div>
+        <div class="badge-vaga"><span class="pulse"></span>Fase 1</div>
+      `;
+    }
+  }
+
+  renderizarContador();
+  // Atualiza a cada 60 segundos
+  setInterval(renderizarContador, 60000);
+</script>
+
+</body>
+</html>

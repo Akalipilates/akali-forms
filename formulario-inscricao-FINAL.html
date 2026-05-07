@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inscrição — Formação de Instrutores de Pilates | Akali</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Variáveis de marca Akali ── */
+    :root {
+      --laranja:       #F18859;
+      --roxo-medio:    #7B417B;
+      --roxo-escuro:   #4C356B;
+      --off-white:     #FAF8F5;
+      --texto:         #2A2A2A;
+      --texto-suave:   #6B6B6B;
+      --borda:         #E8E0F0;
+      --sucesso:       #4CAF50;
+      --erro:          #E53935;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--off-white);
+      color: var(--texto);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      max-width: 540px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 4px 40px rgba(76, 53, 107, 0.12);
+    }
+
+    /* ── Cabeçalho ── */
+    .card-header {
+      background: linear-gradient(135deg, var(--roxo-escuro) 0%, var(--roxo-medio) 100%);
+      padding: 36px 40px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-header::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: rgba(241, 136, 89, 0.15);
+    }
+
+    .card-header::after {
+      content: '';
+      position: absolute;
+      bottom: -20px; left: 30px;
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(241, 136, 89, 0.2);
+      border: 1px solid rgba(241, 136, 89, 0.4);
+      color: #F4B08A;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+    }
+
+    .badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--laranja);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(1.4); }
+    }
+
+    .card-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.25;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .card-header p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.6;
+      position: relative;
+    }
+
+    /* ── Vagas ── */
+    .vagas-bar {
+      background: rgba(255,255,255,0.1);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 14px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .vagas-texto {
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .vagas-texto strong {
+      color: var(--laranja);
+      font-weight: 600;
+    }
+
+    .vagas-progress {
+      flex: 1;
+      height: 6px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .vagas-fill {
+      height: 100%;
+      background: var(--laranja);
+      border-radius: 3px;
+      width: 0%;
+      transition: width 1.2s ease;
+    }
+
+    /* ── Corpo do formulário ── */
+    .card-body { padding: 36px 40px 40px; }
+
+    .form-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 480px) {
+      .card-header, .card-body { padding-left: 24px; padding-right: 24px; }
+      .vagas-bar { padding-left: 24px; padding-right: 24px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--roxo-escuro);
+    }
+
+    input, select {
+      height: 48px;
+      padding: 0 16px;
+      border: 1.5px solid var(--borda);
+      border-radius: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      color: var(--texto);
+      background: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      width: 100%;
+      -webkit-appearance: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--roxo-medio);
+      box-shadow: 0 0 0 3px rgba(123, 65, 123, 0.1);
+    }
+
+    input::placeholder { color: #B0A8C0; }
+
+    select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%237B417B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px; }
+
+    /* ── Aviso Fase 1 ── */
+    .fase-aviso {
+      background: linear-gradient(135deg, rgba(241,136,89,0.08), rgba(123,65,123,0.06));
+      border: 1px solid rgba(241,136,89,0.3);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .fase-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .fase-aviso p {
+      font-size: 13px;
+      color: var(--texto-suave);
+      line-height: 1.5;
+    }
+
+    .fase-aviso strong { color: var(--roxo-escuro); }
+
+    /* ── Botão ── */
+    .btn-submit {
+      width: 100%;
+      height: 54px;
+      background: linear-gradient(135deg, var(--laranja) 0%, #E8724A 100%);
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+      box-shadow: 0 4px 20px rgba(241,136,89,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(241,136,89,0.45);
+    }
+
+    .btn-submit:active:not(:disabled) { transform: translateY(0); }
+    .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .btn-submit.loading .btn-texto { display: none; }
+    .btn-submit.loading .spinner   { display: block; }
+
+    /* ── Termos ── */
+    .termos {
+      text-align: center;
+      font-size: 11px;
+      color: var(--texto-suave);
+      line-height: 1.6;
+      margin-top: 14px;
+    }
+
+    .termos a { color: var(--roxo-medio); text-decoration: underline; }
+
+    /* ── Mensagens de feedback ── */
+    .mensagem {
+      display: none;
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-top: 16px;
+    }
+
+    .mensagem.erro    { background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; display: block; }
+    .mensagem.sucesso { background: #F0FDF4; border: 1px solid #BBF7D0; color: #166534; display: block; }
+
+    /* ── Tela de sucesso ── */
+    .sucesso-tela {
+      display: none;
+      text-align: center;
+      padding: 48px 40px;
+    }
+
+    .sucesso-icone {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, var(--roxo-escuro), var(--roxo-medio));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 32px;
+    }
+
+    .sucesso-tela h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      color: var(--roxo-escuro);
+      margin-bottom: 10px;
+    }
+
+    .sucesso-tela p {
+      font-size: 14px;
+      color: var(--texto-suave);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .btn-redirecionar {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--laranja), #E8724A);
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      box-shadow: 0 4px 16px rgba(241,136,89,0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-redirecionar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(241,136,89,0.4);
+    }
+
+    .countdown {
+      font-size: 12px;
+      color: var(--texto-suave);
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- ── CABEÇALHO ── -->
+  <div class="card-header">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      Inscrições abertas · Fase 1
+    </div>
+    <h1>Formação de Instrutores de Pilates</h1>
+    <p>Preencha seus dados para garantir sua vaga com o valor especial de Fase 1. Após o cadastro, você será direcionada ao pagamento.</p>
+  </div>
+
+  <!-- ── BARRA DE VAGAS ── -->
+  <div class="vagas-bar">
+    <span class="vagas-texto">
+      <strong id="qtd-inscritos">—</strong> de <strong id="qtd-vagas">15</strong> vagas confirmadas
+    </span>
+    <div class="vagas-progress">
+      <div class="vagas-fill" id="barra-progresso"></div>
+    </div>
+    <span class="vagas-texto" id="vagas-restantes" style="white-space:nowrap">— restantes</span>
+  </div>
+
+  <!-- ── FORMULÁRIO ── -->
+  <div class="card-body" id="form-area">
+    <form id="form-inscricao" novalidate>
+      <div class="form-grid">
+
+        <!-- Nome completo -->
+        <div class="field">
+          <label for="nome">Nome completo *</label>
+          <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required autocomplete="name" />
+        </div>
+
+        <!-- E-mail + WhatsApp -->
+        <div class="form-row">
+          <div class="field">
+            <label for="email">E-mail *</label>
+            <input type="email" id="email" name="email" placeholder="seu@email.com" required autocomplete="email" />
+          </div>
+          <div class="field">
+            <label for="whatsapp">WhatsApp *</label>
+            <input type="tel" id="whatsapp" name="whatsapp" placeholder="(00) 00000-0000" required autocomplete="tel" maxlength="15" />
+          </div>
+        </div>
+
+        <!-- Área + Como conheceu -->
+        <div class="form-row">
+          <div class="field">
+            <label for="area">Área de atuação *</label>
+            <select id="area" name="area" required>
+              <option value="" disabled selected>Selecione...</option>
+              <option>Fisioterapeuta</option>
+              <option>Educador(a) Físico(a)</option>
+              <option>Terapeuta Ocupacional</option>
+              <option>Profissional de Saúde</option>
+              <option>Outra área</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="como">Como nos conheceu? *</label>
+            <select id="como" name="como" required>
+              <option value="" disabled selected>Selecione...</option>
+              <option>Instagram @akalipilates</option>
+              <option>Instagram @julianamirandafisio</option>
+              <option>Indicação de amigo/colega</option>
+              <option>Google / Pesquisa</option>
+              <option>WhatsApp</option>
+              <option>Outro</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Aviso Fase 1 -->
+        <div class="fase-aviso">
+          <span class="fase-icon">🔒</span>
+          <p><strong>Você está na Fase 1.</strong> Ao finalizar o pagamento, sua vaga é garantida com o valor especial. Quando a turma confirmar, o valor sobe para a Fase 2.</p>
+        </div>
+
+        <!-- Botão -->
+        <button type="submit" class="btn-submit" id="btn-enviar">
+          <span class="btn-texto">Garantir minha vaga agora →</span>
+          <span class="spinner"></span>
+        </button>
+
+        <!-- Mensagem de erro -->
+        <div class="mensagem" id="msg-erro"></div>
+
+        <!-- Termos -->
+        <p class="termos">
+          Ao continuar, você concorda com os
+          <a href="https://curso.akalipilates.com#termos" target="_blank">Termos de Inscrição</a>
+          da Akali Fisioterapia &amp; Pilates.<br />
+          Seus dados são protegidos pela LGPD e não serão compartilhados.
+        </p>
+
+      </div>
+    </form>
+  </div>
+
+  <!-- ── TELA DE SUCESSO (oculta inicialmente) ── -->
+  <div class="sucesso-tela" id="sucesso-tela">
+    <div class="sucesso-icone">🎉</div>
+    <h2>Cadastro realizado!</h2>
+    <p>Seus dados foram salvos com sucesso.<br />Agora é só finalizar o pagamento para confirmar sua vaga na Fase 1.</p>
+    <a href="#" id="btn-kiwify" class="btn-redirecionar" target="_top">
+      Finalizar pagamento →
+    </a>
+    <p class="countdown" id="countdown-texto">Redirecionando automaticamente em <strong id="contador-segundos">5</strong>s...</p>
+  </div>
+
+</div>
+
+<script>
+  // ── CONFIGURAÇÃO — substitua pela URL do seu Apps Script implantado ──
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwl7rvXt6fazop3bWayfMJPa6CAeAe4IDI5jL2H7KpEPqtAcCDXEFXA9fwqJD2LKLif/exec';
+  const KIWIFY_URL      = 'https://pay.kiwify.com.br/HleuRUM';
+
+  // ── Formata telefone enquanto digita ──
+  document.getElementById('whatsapp').addEventListener('input', function (e) {
+    let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+    if (v.length >= 7) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+    else if (v.length >= 3) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+    else if (v.length >= 1) v = `(${v}`;
+    e.target.value = v;
+  });
+
+  // ── Carrega contador de vagas ──
+  async function carregarContador() {
+    try {
+      const res  = await fetch(`${APPS_SCRIPT_URL}?acao=contador`);
+      const json = await res.json();
+      const ins  = json.inscritos ?? 0;
+      const vag  = json.vagas    ?? 15;
+      const res2 = json.restantes ?? (vag - ins);
+      const pct  = Math.min(100, (ins / vag) * 100);
+
+      document.getElementById('qtd-inscritos').textContent   = ins;
+      document.getElementById('qtd-vagas').textContent       = vag;
+      document.getElementById('vagas-restantes').textContent = `${res2} restante${res2 !== 1 ? 's' : ''}`;
+
+      setTimeout(() => {
+        document.getElementById('barra-progresso').style.width = pct + '%';
+      }, 300);
+    } catch (_) {
+      // falha silenciosa — exibe traços
+    }
+  }
+
+  carregarContador();
+
+  // ── Submissão do formulário ──
+  document.getElementById('form-inscricao').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const nome     = document.getElementById('nome').value.trim();
+    const email    = document.getElementById('email').value.trim();
+    const whatsapp = document.getElementById('whatsapp').value.trim();
+    const area     = document.getElementById('area').value;
+    const como     = document.getElementById('como').value;
+    const msgErro  = document.getElementById('msg-erro');
+    const btn      = document.getElementById('btn-enviar');
+
+    // Validação básica
+    msgErro.className = 'mensagem';
+    msgErro.textContent = '';
+
+    if (!nome || !email || !whatsapp || !area || !como) {
+      msgErro.textContent = '⚠️ Por favor, preencha todos os campos obrigatórios.';
+      msgErro.classList.add('erro');
+      return;
+    }
+
+    const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!emailValido) {
+      msgErro.textContent = '⚠️ Por favor, insira um e-mail válido.';
+      msgErro.classList.add('erro');
+      return;
+    }
+
+    // Envia
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tipo: 'inscricao', nome, email, whatsapp, area, como, fase: 'Fase 1' })
+      });
+
+      // Exibe tela de sucesso
+      document.getElementById('form-area').style.display = 'none';
+      const sucesso = document.getElementById('sucesso-tela');
+      sucesso.style.display = 'block';
+      document.getElementById('btn-kiwify').href = KIWIFY_URL;
+
+      // Contagem regressiva e redirecionamento
+      let seg = 5;
+      const intervalo = setInterval(() => {
+        seg--;
+        document.getElementById('contador-segundos').textContent = seg;
+        if (seg <= 0) {
+          clearInterval(intervalo);
+          window.top.location.href = KIWIFY_URL;
+        }
+      }, 1000);
+
+    } catch (_) {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      msgErro.textContent = '⚠️ Erro de conexão. Verifique sua internet e tente novamente.';
+      msgErro.classList.add('erro');
+    }
+  });
+</script>
+
+</body>
+</html>
