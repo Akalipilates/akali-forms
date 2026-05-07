@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lista de Interesse — Formação em Pilates | Akali</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --laranja:     #F18859;
+      --roxo-medio:  #7B417B;
+      --roxo-escuro: #4C356B;
+      --off-white:   #FAF8F5;
+      --texto:       #2A2A2A;
+      --texto-suave: #6B6B6B;
+      --borda:       #E8E0F0;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--off-white);
+      color: var(--texto);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      max-width: 540px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 4px 40px rgba(76,53,107,0.12);
+    }
+
+    /* CABEÇALHO */
+    .card-header {
+      background: linear-gradient(135deg, var(--roxo-escuro) 0%, var(--roxo-medio) 100%);
+      padding: 32px 40px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-header::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: rgba(241,136,89,0.12);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(241,136,89,0.2);
+      border: 1px solid rgba(241,136,89,0.4);
+      color: #F4B08A;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+    }
+    .badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--laranja);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50%      { opacity:.5; transform:scale(1.4); }
+    }
+    .card-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.25;
+      margin-bottom: 8px;
+      position: relative;
+    }
+    .card-header p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.6;
+      position: relative;
+    }
+
+    /* CORPO */
+    .card-body { padding: 32px 40px 36px; }
+    .form-grid { display: grid; gap: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    @media (max-width: 480px) {
+      .card-header, .card-body { padding-left: 24px; padding-right: 24px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--roxo-escuro);
+    }
+
+    input, select {
+      height: 48px;
+      padding: 0 16px;
+      border: 1.5px solid var(--borda);
+      border-radius: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      color: var(--texto);
+      background: #fff;
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+      width: 100%;
+      -webkit-appearance: none;
+    }
+    input:focus, select:focus {
+      border-color: var(--roxo-medio);
+      box-shadow: 0 0 0 3px rgba(123,65,123,0.1);
+    }
+    input::placeholder { color: #B0A8C0; }
+    select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%237B417B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 40px;
+    }
+
+    /* RADIO BUTTONS */
+    .radio-group { display: flex; flex-direction: column; gap: 8px; margin-top: 2px; }
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border: 1.5px solid var(--borda);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+    }
+    .radio-option:hover { border-color: var(--roxo-medio); background: rgba(123,65,123,0.03); }
+    .radio-option input[type="radio"] { display: none; }
+    .radio-option .radio-circle {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--borda);
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .2s;
+    }
+    .radio-option .radio-circle::after {
+      content: '';
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--roxo-medio);
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .radio-option input[type="radio"]:checked ~ .radio-circle { border-color: var(--roxo-medio); }
+    .radio-option input[type="radio"]:checked ~ .radio-circle::after { opacity: 1; }
+    .radio-option.selecionado { border-color: var(--roxo-medio); background: rgba(123,65,123,0.04); }
+    .radio-option .radio-texto { font-size: 14px; color: var(--texto); }
+
+    /* AVISO */
+    .aviso {
+      background: linear-gradient(135deg, rgba(241,136,89,0.08), rgba(123,65,123,0.06));
+      border: 1px solid rgba(241,136,89,0.25);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--texto-suave);
+      line-height: 1.5;
+    }
+    .aviso strong { color: var(--roxo-escuro); }
+
+    /* BOTÃO */
+    .btn-submit {
+      width: 100%;
+      height: 52px;
+      background: linear-gradient(135deg, var(--roxo-escuro), var(--roxo-medio));
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s, opacity .15s;
+      box-shadow: 0 4px 20px rgba(76,53,107,0.3);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(76,53,107,0.35); }
+    .btn-submit:disabled { opacity: .7; cursor: not-allowed; }
+    .btn-submit.loading .btn-texto { display: none; }
+    .btn-submit.loading .spinner { display: block; }
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .mensagem { display: none; padding: 12px 16px; border-radius: 10px; font-size: 13px; line-height: 1.5; margin-top: 4px; }
+    .mensagem.erro    { background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; display: block; }
+    .mensagem.sucesso { background: #F0FDF4; border: 1px solid #BBF7D0; color: #166534; display: block; }
+
+    .termos { text-align: center; font-size: 11px; color: var(--texto-suave); line-height: 1.6; margin-top: 12px; }
+    .termos a { color: var(--roxo-medio); text-decoration: underline; }
+
+    /* TELA SUCESSO */
+    .sucesso-tela { display: none; text-align: center; padding: 48px 40px; }
+    .sucesso-icone {
+      width: 68px; height: 68px;
+      background: linear-gradient(135deg, var(--roxo-escuro), var(--roxo-medio));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px; font-size: 30px;
+    }
+    .sucesso-tela h2 { font-family: 'Cormorant Garamond', serif; font-size: 26px; color: var(--roxo-escuro); margin-bottom: 10px; }
+    .sucesso-tela p { font-size: 14px; color: var(--texto-suave); line-height: 1.7; }
+  </style>
+</head>
+<body>
+<div class="card">
+
+  <!-- CABEÇALHO -->
+  <div class="card-header">
+    <div class="badge"><span class="badge-dot"></span>Lista de interesse</div>
+    <h1>Fique por dentro da próxima turma</h1>
+    <p>Deixe seu contato e seja a primeira a saber quando confirmarmos as datas e abrirmos as inscrições.</p>
+  </div>
+
+  <!-- FORMULÁRIO -->
+  <div class="card-body" id="form-area">
+    <form id="form-leads" novalidate>
+      <div class="form-grid">
+
+        <!-- Nome -->
+        <div class="field">
+          <label for="nome">Nome completo *</label>
+          <input type="text" id="nome" placeholder="Seu nome completo" required autocomplete="name" />
+        </div>
+
+        <!-- Email + WhatsApp -->
+        <div class="form-row">
+          <div class="field">
+            <label for="email">E-mail *</label>
+            <input type="email" id="email" placeholder="seu@email.com" required autocomplete="email" />
+          </div>
+          <div class="field">
+            <label for="whatsapp">WhatsApp *</label>
+            <input type="tel" id="whatsapp" placeholder="(00) 00000-0000" required maxlength="15" />
+          </div>
+        </div>
+
+        <!-- Você é -->
+        <div class="field">
+          <label>Você é: *</label>
+          <div class="radio-group" id="grupo-perfil">
+            <label class="radio-option" onclick="selecionarRadio(this)">
+              <input type="radio" name="perfil" value="Fisioterapeuta graduado" />
+              <span class="radio-circle"></span>
+              <span class="radio-texto">Fisioterapeuta graduado(a)</span>
+            </label>
+            <label class="radio-option" onclick="selecionarRadio(this)">
+              <input type="radio" name="perfil" value="Estudante de Fisioterapia" />
+              <span class="radio-circle"></span>
+              <span class="radio-texto">Estudante de Fisioterapia</span>
+            </label>
+            <label class="radio-option" onclick="selecionarRadio(this)">
+              <input type="radio" name="perfil" value="Outro profissional da saúde" />
+              <span class="radio-circle"></span>
+              <span class="radio-texto">Outro profissional da saúde</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Aviso -->
+        <div class="aviso">
+          💜 <strong>Sem compromisso.</strong> Você só receberá um aviso quando abrirmos as inscrições. Nada de spam.
+        </div>
+
+        <!-- Botão -->
+        <button type="submit" class="btn-submit" id="btn-enviar">
+          <span class="btn-texto">Quero ser avisada →</span>
+          <span class="spinner"></span>
+        </button>
+
+        <div class="mensagem" id="msg-erro"></div>
+
+        <p class="termos">
+          Seus dados são protegidos pela LGPD e não serão compartilhados.<br/>
+          <a href="https://curso.akalipilates.com#termos" target="_blank">Termos de uso</a>
+        </p>
+
+      </div>
+    </form>
+  </div>
+
+  <!-- SUCESSO -->
+  <div class="sucesso-tela" id="sucesso-tela">
+    <div class="sucesso-icone">💜</div>
+    <h2>Você está na lista!</h2>
+    <p>Assim que abrirmos as inscrições da próxima turma, você será uma das primeiras a saber.<br/><br/>Fique de olho no seu WhatsApp e e-mail. 😊</p>
+  </div>
+
+</div>
+
+<script>
+  const APPS_URL = 'https://script.google.com/macros/s/AKfycbwl7rvXt6fazop3bWayfMJPa6CAeAe4IDI5jL2H7KpEPqtAcCDXEFXA9fwqJD2LKLif/exec';
+
+  // Formata telefone
+  document.getElementById('whatsapp').addEventListener('input', function(e) {
+    let v = e.target.value.replace(/\D/g,'').slice(0,11);
+    if (v.length >= 7) v = '(' + v.slice(0,2) + ') ' + v.slice(2,7) + '-' + v.slice(7);
+    else if (v.length >= 3) v = '(' + v.slice(0,2) + ') ' + v.slice(2);
+    else if (v.length >= 1) v = '(' + v;
+    e.target.value = v;
+  });
+
+  // Seleciona radio visualmente
+  function selecionarRadio(el) {
+    document.querySelectorAll('.radio-option').forEach(o => o.classList.remove('selecionado'));
+    el.classList.add('selecionado');
+  }
+
+  // Submissão
+  document.getElementById('form-leads').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const nome     = document.getElementById('nome').value.trim();
+    const email    = document.getElementById('email').value.trim();
+    const whatsapp = document.getElementById('whatsapp').value.trim();
+    const perfil   = document.querySelector('input[name="perfil"]:checked')?.value || '';
+    const msgErro  = document.getElementById('msg-erro');
+    const btn      = document.getElementById('btn-enviar');
+
+    msgErro.className = 'mensagem';
+    msgErro.textContent = '';
+
+    if (!nome || !email || !whatsapp || !perfil) {
+      msgErro.textContent = '⚠️ Por favor, preencha todos os campos obrigatórios.';
+      msgErro.classList.add('erro');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      msgErro.textContent = '⚠️ Por favor, insira um e-mail válido.';
+      msgErro.classList.add('erro');
+      return;
+    }
+
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    try {
+      await fetch(APPS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tipo: 'lead', nome, email, whatsapp, mensagem: perfil })
+      });
+      document.getElementById('form-area').style.display   = 'none';
+      document.getElementById('sucesso-tela').style.display = 'block';
+    } catch(_) {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      msgErro.textContent = '⚠️ Erro de conexão. Verifique sua internet e tente novamente.';
+      msgErro.classList.add('erro');
+    }
+  });
+</script>
+</body>
+</html>
