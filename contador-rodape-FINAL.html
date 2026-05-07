@@ -175,7 +175,7 @@
       const json = await res.json();
 
       const inscritos  = json.inscritos  ?? 0;
-      const vagas      = json.vagas      ?? 15;
+      const vagas      = json.vagas ?? 12;
       const restantes  = json.restantes  ?? (vagas - inscritos);
       const pct        = Math.min(100, (inscritos / vagas) * 100).toFixed(0);
 

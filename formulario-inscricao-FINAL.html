@@ -373,7 +373,7 @@
   <!-- ── BARRA DE VAGAS ── -->
   <div class="vagas-bar">
     <span class="vagas-texto">
-      <strong id="qtd-inscritos">—</strong> de <strong id="qtd-vagas">15</strong> vagas confirmadas
+      <strong id="qtd-inscritos">—</strong> de <strong id="qtd-vagas">12</strong> vagas confirmadas
     </span>
     <div class="vagas-progress">
       <div class="vagas-fill" id="barra-progresso"></div>
@@ -491,7 +491,7 @@
       const res  = await fetch(`${APPS_SCRIPT_URL}?acao=contador`);
       const json = await res.json();
       const ins  = json.inscritos ?? 0;
-      const vag  = json.vagas    ?? 15;
+      const vag  = json.vagas    ?? 12;
       const res2 = json.restantes ?? (vag - ins);
       const pct  = Math.min(100, (ins / vag) * 100);
 
