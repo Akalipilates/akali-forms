@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Akali — Administração</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --laranja: #F18859;
+      --roxo-medio: #7B417B;
+      --roxo-escuro: #4C356B;
+      --off-white: #FAF8F5;
+      --texto: #2A2A2A;
+      --texto-suave: #6B6B6B;
+      --borda: #E8E0F0;
+      --sucesso: #4CAF50;
+      --erro: #E53935;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Outfit', sans-serif; background: var(--off-white); color: var(--texto); min-height: 100vh; }
+
+    /* LOGIN */
+    .login-wrap {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;
+      background: linear-gradient(135deg, var(--roxo-escuro) 0%, var(--roxo-medio) 100%);
+    }
+    .login-card {
+      background: #fff; border-radius: 20px; padding: 48px 40px; max-width: 400px; width: 100%;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+    }
+    .login-logo { text-align: center; margin-bottom: 32px; }
+    .login-logo h1 { font-family: 'Cormorant Garamond', serif; font-size: 32px; color: var(--roxo-escuro); }
+    .login-logo p { font-size: 13px; color: var(--texto-suave); margin-top: 4px; }
+    .login-card label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--roxo-escuro); display: block; margin-bottom: 6px; }
+    .login-card input[type=password] {
+      width: 100%; height: 48px; padding: 0 16px; border: 1.5px solid var(--borda); border-radius: 10px;
+      font-family: 'Outfit', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s;
+    }
+    .login-card input[type=password]:focus { border-color: var(--roxo-medio); box-shadow: 0 0 0 3px rgba(123,65,123,0.1); }
+    .btn-login {
+      width: 100%; height: 50px; margin-top: 20px; background: linear-gradient(135deg, var(--roxo-escuro), var(--roxo-medio));
+      color: #fff; border: none; border-radius: 12px; font-family: 'Outfit', sans-serif; font-size: 15px;
+      font-weight: 600; cursor: pointer; transition: opacity 0.2s;
+    }
+    .btn-login:hover { opacity: 0.9; }
+    .login-erro { color: var(--erro); font-size: 13px; text-align: center; margin-top: 12px; display: none; }
+
+    /* PAINEL */
+    .painel { display: none; }
+    .topbar {
+      background: linear-gradient(135deg, var(--roxo-escuro), var(--roxo-medio));
+      padding: 16px 32px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .topbar-titulo { font-family: 'Cormorant Garamond', serif; font-size: 24px; color: #fff; }
+    .topbar-sub { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+    .btn-sair {
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); color: #fff;
+      padding: 8px 18px; border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 13px;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .btn-sair:hover { background: rgba(255,255,255,0.25); }
+
+    .conteudo { padding: 32px; max-width: 1100px; margin: 0 auto; }
+
+    /* CARDS DE RESUMO */
+    .resumo { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .resumo-card {
+      background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(76,53,107,0.08);
+      border-left: 4px solid var(--roxo-medio);
+    }
+    .resumo-card.laranja { border-left-color: var(--laranja); }
+    .resumo-card.verde { border-left-color: var(--sucesso); }
+    .resumo-numero { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 700; color: var(--roxo-escuro); line-height: 1; }
+    .resumo-card.laranja .resumo-numero { color: var(--laranja); }
+    .resumo-card.verde .resumo-numero { color: var(--sucesso); }
+    .resumo-label { font-size: 13px; color: var(--texto-suave); margin-top: 4px; }
+    .resumo-barra { height: 6px; background: var(--borda); border-radius: 3px; margin-top: 12px; overflow: hidden; }
+    .resumo-fill { height: 100%; background: linear-gradient(90deg, var(--roxo-medio), var(--laranja)); border-radius: 3px; width: 0%; transition: width 1s ease; }
+
+    /* TABS */
+    .tabs { display: flex; gap: 4px; margin-bottom: 20px; background: #fff; padding: 6px; border-radius: 12px; box-shadow: 0 2px 12px rgba(76,53,107,0.08); width: fit-content; }
+    .tab { padding: 8px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--texto-suave); transition: all 0.2s; border: none; background: transparent; font-family: 'Outfit', sans-serif; }
+    .tab.ativo { background: var(--roxo-escuro); color: #fff; }
+
+    /* FORMULÁRIO ADICIONAR */
+    .form-adicionar {
+      background: #fff; border-radius: 16px; padding: 28px; margin-bottom: 24px;
+      box-shadow: 0 2px 12px rgba(76,53,107,0.08); display: none;
+    }
+    .form-adicionar.visivel { display: block; }
+    .form-adicionar h3 { font-size: 15px; font-weight: 600; color: var(--roxo-escuro); margin-bottom: 20px; }
+    .form-grid-admin { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+    .field-admin { display: flex; flex-direction: column; gap: 5px; }
+    .field-admin label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--roxo-escuro); }
+    .field-admin input, .field-admin select {
+      height: 42px; padding: 0 12px; border: 1.5px solid var(--borda); border-radius: 8px;
+      font-family: 'Outfit', sans-serif; font-size: 13px; outline: none; transition: border-color 0.2s;
+    }
+    .field-admin input:focus, .field-admin select:focus { border-color: var(--roxo-medio); }
+    .form-acoes { display: flex; gap: 10px; margin-top: 16px; }
+    .btn-salvar {
+      height: 42px; padding: 0 24px; background: linear-gradient(135deg, var(--laranja), #E8724A);
+      color: #fff; border: none; border-radius: 8px; font-family: 'Outfit', sans-serif;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+    }
+    .btn-cancelar {
+      height: 42px; padding: 0 20px; background: var(--off-white); color: var(--texto-suave);
+      border: 1.5px solid var(--borda); border-radius: 8px; font-family: 'Outfit', sans-serif;
+      font-size: 13px; cursor: pointer;
+    }
+
+    /* TABELA */
+    .tabela-wrap { background: #fff; border-radius: 16px; box-shadow: 0 2px 12px rgba(76,53,107,0.08); overflow: hidden; }
+    .tabela-header { padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--borda); }
+    .tabela-titulo { font-size: 15px; font-weight: 600; color: var(--roxo-escuro); }
+    .btn-adicionar {
+      height: 38px; padding: 0 18px; background: var(--roxo-escuro); color: #fff; border: none;
+      border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; gap: 6px;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th { padding: 12px 20px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--texto-suave); background: #FAFAFA; border-bottom: 1px solid var(--borda); }
+    td { padding: 14px 20px; font-size: 13px; border-bottom: 1px solid var(--borda); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #FAFAFA; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .badge-fase1 { background: rgba(241,136,89,0.12); color: #C85D2A; }
+    .badge-fase2 { background: rgba(76,53,107,0.1); color: var(--roxo-escuro); }
+    .badge-lead { background: rgba(123,65,123,0.1); color: var(--roxo-medio); }
+    .vazio { text-align: center; padding: 48px; color: var(--texto-suave); font-size: 14px; }
+    .loading { text-align: center; padding: 48px; color: var(--texto-suave); }
+    .spinner-inline { display: inline-block; width: 20px; height: 20px; border: 2px solid var(--borda); border-top-color: var(--roxo-medio); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 600px) {
+      .conteudo { padding: 16px; }
+      .topbar { padding: 14px 16px; }
+      .tabela-wrap { overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TELA DE LOGIN -->
+<div class="login-wrap" id="tela-login">
+  <div class="login-card">
+    <div class="login-logo">
+      <h1>Akali</h1>
+      <p>Painel de Administração · Formação Pilates</p>
+    </div>
+    <div>
+      <label for="senha-input">Senha de acesso</label>
+      <input type="password" id="senha-input" placeholder="Digite a senha" onkeydown="if(event.key==='Enter') entrar()" />
+      <p class="login-erro" id="msg-erro-login">Senha incorreta. Tente novamente.</p>
+      <button class="btn-login" onclick="entrar()">Entrar no painel</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAINEL PRINCIPAL -->
+<div class="painel" id="tela-painel">
+
+  <div class="topbar">
+    <div>
+      <div class="topbar-titulo">Akali — Painel de Inscrições</div>
+      <div class="topbar-sub">Formação de Instrutores de Pilates</div>
+    </div>
+    <button class="btn-sair" onclick="sair()">Sair</button>
+  </div>
+
+  <div class="conteudo">
+
+    <!-- CARDS RESUMO -->
+    <div class="resumo">
+      <div class="resumo-card laranja">
+        <div class="resumo-numero" id="num-inscritos">—</div>
+        <div class="resumo-label">Inscritos confirmados</div>
+        <div class="resumo-barra"><div class="resumo-fill" id="barra-inscritos"></div></div>
+      </div>
+      <div class="resumo-card">
+        <div class="resumo-numero" id="num-vagas">—</div>
+        <div class="resumo-label">Vagas restantes</div>
+      </div>
+      <div class="resumo-card verde">
+        <div class="resumo-numero" id="num-leads">—</div>
+        <div class="resumo-label">Leads na lista de espera</div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab ativo" onclick="trocarTab('inscritos', this)">Inscritos</button>
+      <button class="tab" onclick="trocarTab('leads', this)">Leads</button>
+    </div>
+
+    <!-- FORMULÁRIO ADICIONAR INSCRITO -->
+    <div class="form-adicionar" id="form-inscrito">
+      <h3>➕ Adicionar inscrito manualmente</h3>
+      <div class="form-grid-admin">
+        <div class="field-admin">
+          <label>Nome completo *</label>
+          <input type="text" id="add-nome" placeholder="Nome da aluna" />
+        </div>
+        <div class="field-admin">
+          <label>E-mail</label>
+          <input type="email" id="add-email" placeholder="email@exemplo.com" />
+        </div>
+        <div class="field-admin">
+          <label>WhatsApp</label>
+          <input type="text" id="add-whatsapp" placeholder="(00) 00000-0000" />
+        </div>
+        <div class="field-admin">
+          <label>Área de atuação</label>
+          <select id="add-area">
+            <option value="">Selecione...</option>
+            <option>Fisioterapeuta</option>
+            <option>Educador(a) Físico(a)</option>
+            <option>Terapeuta Ocupacional</option>
+            <option>Profissional de Saúde</option>
+            <option>Outra área</option>
+          </select>
+        </div>
+        <div class="field-admin">
+          <label>Como conheceu</label>
+          <input type="text" id="add-como" placeholder="Ex: Instagram, indicação..." />
+        </div>
+        <div class="field-admin">
+          <label>Fase</label>
+          <select id="add-fase">
+            <option value="Fase 1">Fase 1 — Pré-turma</option>
+            <option value="Fase 2">Fase 2 — Turma confirmada</option>
+            <option value="Inscrição anterior">Inscrição anterior ao sistema</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-acoes">
+        <button class="btn-salvar" onclick="salvarInscrito()">Salvar inscrito</button>
+        <button class="btn-cancelar" onclick="toggleForm()">Cancelar</button>
+      </div>
+    </div>
+
+    <!-- TABELA INSCRITOS -->
+    <div class="tabela-wrap" id="tabela-inscritos">
+      <div class="tabela-header">
+        <span class="tabela-titulo">Lista de Inscritos</span>
+        <button class="btn-adicionar" onclick="toggleForm()">+ Adicionar manualmente</button>
+      </div>
+      <div id="corpo-inscritos"><div class="loading"><span class="spinner-inline"></span></div></div>
+    </div>
+
+    <!-- TABELA LEADS -->
+    <div class="tabela-wrap" id="tabela-leads" style="display:none">
+      <div class="tabela-header">
+        <span class="tabela-titulo">Lista de Leads</span>
+      </div>
+      <div id="corpo-leads"><div class="loading"><span class="spinner-inline"></span></div></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const APPS_URL = 'https://script.google.com/macros/s/AKfycbwl7rvXt6fazop3bWayfMJPa6CAeAe4IDI5jL2H7KpEPqtAcCDXEFXA9fwqJD2LKLif/exec';
+  const SENHA    = 'akali2025';
+  let tabAtual   = 'inscritos';
+  let formAberto = false;
+
+  // LOGIN
+  function entrar() {
+    const v = document.getElementById('senha-input').value;
+    if (v === SENHA) {
+      document.getElementById('tela-login').style.display  = 'none';
+      document.getElementById('tela-painel').style.display = 'block';
+      carregarDados();
+    } else {
+      document.getElementById('msg-erro-login').style.display = 'block';
+    }
+  }
+
+  function sair() {
+    document.getElementById('tela-login').style.display  = 'flex';
+    document.getElementById('tela-painel').style.display = 'none';
+    document.getElementById('senha-input').value = '';
+  }
+
+  // TABS
+  function trocarTab(tab, el) {
+    tabAtual = tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('ativo'));
+    el.classList.add('ativo');
+    document.getElementById('tabela-inscritos').style.display = tab === 'inscritos' ? 'block' : 'none';
+    document.getElementById('tabela-leads').style.display     = tab === 'leads'     ? 'block' : 'none';
+    document.getElementById('form-inscrito').classList.remove('visivel');
+    formAberto = false;
+  }
+
+  function toggleForm() {
+    formAberto = !formAberto;
+    document.getElementById('form-inscrito').classList.toggle('visivel', formAberto);
+  }
+
+  // CARREGAR DADOS
+  async function carregarDados() {
+    try {
+      const res  = await fetch(`${APPS_URL}?acao=contador`);
+      const json = await res.json();
+      const ins  = json.inscritos ?? 0;
+      const vag  = json.vagas    ?? 15;
+      const res2 = json.restantes ?? (vag - ins);
+      const pct  = Math.min(100, (ins / vag) * 100);
+
+      document.getElementById('num-inscritos').textContent = ins;
+      document.getElementById('num-vagas').textContent     = res2;
+      setTimeout(() => { document.getElementById('barra-inscritos').style.width = pct + '%'; }, 200);
+    } catch(_) {}
+
+    await carregarInscritos();
+    await carregarLeads();
+  }
+
+  async function carregarInscritos() {
+    try {
+      const res  = await fetch(`${APPS_URL}?acao=listar&tipo=inscricao`);
+      const json = await res.json();
+      renderTabela('corpo-inscritos', json.dados || [], 'inscrito');
+    } catch(_) {
+      document.getElementById('corpo-inscritos').innerHTML = '<div class="vazio">Erro ao carregar dados.</div>';
+    }
+  }
+
+  async function carregarLeads() {
+    try {
+      const res  = await fetch(`${APPS_URL}?acao=listar&tipo=lead`);
+      const json = await res.json();
+      document.getElementById('num-leads').textContent = (json.dados || []).length;
+      renderTabela('corpo-leads', json.dados || [], 'lead');
+    } catch(_) {
+      document.getElementById('corpo-leads').innerHTML = '<div class="vazio">Erro ao carregar dados.</div>';
+    }
+  }
+
+  function renderTabela(id, dados, tipo) {
+    if (!dados.length) {
+      document.getElementById(id).innerHTML = '<div class="vazio">Nenhum registro encontrado ainda.</div>';
+      return;
+    }
+    const cols = tipo === 'lead'
+      ? ['Data/Hora','Nome','E-mail','WhatsApp','Mensagem']
+      : ['Data/Hora','Nome','E-mail','WhatsApp','Área','Como Conheceu','Fase'];
+    let html = `<table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>`;
+    dados.forEach(row => {
+      html += '<tr>';
+      row.forEach((cell, i) => {
+        if (i === cols.length - 1 && tipo === 'inscrito') {
+          const cls = cell === 'Fase 1' ? 'badge-fase1' : cell === 'Fase 2' ? 'badge-fase2' : 'badge-lead';
+          html += `<td><span class="badge ${cls}">${cell||'—'}</span></td>`;
+        } else {
+          html += `<td>${cell||'—'}</td>`;
+        }
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    document.getElementById(id).innerHTML = html;
+  }
+
+  // SALVAR INSCRITO MANUAL
+  async function salvarInscrito() {
+    const nome = document.getElementById('add-nome').value.trim();
+    if (!nome) { alert('Nome é obrigatório.'); return; }
+    const dados = {
+      tipo: 'inscricao',
+      nome,
+      email:    document.getElementById('add-email').value.trim(),
+      whatsapp: document.getElementById('add-whatsapp').value.trim(),
+      area:     document.getElementById('add-area').value,
+      como:     document.getElementById('add-como').value.trim(),
+      fase:     document.getElementById('add-fase').value
+    };
+    try {
+      await fetch(APPS_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(dados) });
+      toggleForm();
+      ['add-nome','add-email','add-whatsapp','add-como'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('add-area').value = '';
+      document.getElementById('add-fase').value = 'Fase 1';
+      await carregarDados();
+    } catch(_) {
+      alert('Erro ao salvar. Tente novamente.');
+    }
+  }
+</script>
+
+</body>
+</html>
